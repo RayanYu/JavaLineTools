@@ -22,14 +22,15 @@ import java.util.Map;
  * @author Rayan
  */
 public class DataLoading {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
         Path path = Paths.get("C:\\Users\\user\\OneDrive\\GTW\\[LINE] 🎏Game Time! Who-的聊天_20210529.txt");
         long join_Count = 0; // 加入人數
         long leave_count = 0;  // 退出人數
         
         Map<String, Integer> menbers = new LinkedHashMap<>();
+        long startTime = System.currentTimeMillis();
         
-        
+        /*
         // 1. Files.lines (Stream 串流)
 //            Files.lines(path).forEach(System.out::println);
         Files.lines(path).filter(p -> p.contains("已加入群組。") ).forEach(p -> {
@@ -50,10 +51,20 @@ public class DataLoading {
         leave_count = Files.lines(path).filter(p -> p.contains("已退出群組。")).count();
         System.out.println("已加入群組人數：" + join_Count);
         System.out.println("已退出群組人數：" + leave_count);
-        /*
         // 2. Files.readAllLines (List 集合)
-        List<String> contentList = Files.readAllLines(path, StandardCharsets.UTF_8);
-        System.out.println(contentList);
+//        List<String> contentList = Files.readAllLines(path, StandardCharsets.UTF_8);
+//        System.out.println(contentList);
         */
+        // 89毫秒
+        
+        // 3. thread 執行
+        Thread t1 = new Thread(new LoadingDataThread(path, "已加入群組。"));
+        Thread t2 = new Thread(new LoadingDataThread(path, "已退出群組。"));
+        t1.start();
+        t2.start();
+        t1.join();
+        t2.join();
+        long endTime = System.currentTimeMillis();        
+        System.out.printf("花費時間：%d", (endTime - startTime));
     }
 }

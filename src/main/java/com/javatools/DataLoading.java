@@ -60,11 +60,17 @@ public class DataLoading {
         // 3. thread 執行
         Thread t1 = new Thread(new LoadingDataThread(path, "已加入群組。"));
         Thread t2 = new Thread(new LoadingDataThread(path, "已退出群組。"));
+        Thread t3 = new Thread(new LoadingDataThread(path));
+        Thread t4 = new Thread(new LoadingDataThread_Set(path));
         t1.start();
         t2.start();
+//        t3.start();
+        t4.start();
         t1.join();
         t2.join();
-        long endTime = System.currentTimeMillis();        
+//        t3.join();
+        t4.join();
+        long endTime = System.currentTimeMillis();
         System.out.printf("花費時間：%d", (endTime - startTime));
     }
 }
